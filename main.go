@@ -15,7 +15,9 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "HELLO!")
 	})
-	r.GET("/books", controller.FindBooks)
+
+	r.GET("/books", controller.GetAllBooks)
+	r.GET("/books/:id", controller.GetBookByID)
 
 	r.Run()
 }

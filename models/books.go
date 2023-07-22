@@ -53,6 +53,10 @@ func GetBookByID(bookid int) (*Book, error) {
 		return nil, err
 	}
 
+	if err := row.Err(); err != nil {
+		return nil, err
+	}
+
 	return book, err
 }
 
@@ -87,6 +91,7 @@ func GetAllBooks() ([]Book, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		books = append(books, book)
 	}
 
