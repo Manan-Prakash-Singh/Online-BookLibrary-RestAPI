@@ -50,12 +50,13 @@ func createBookTable() error {
 
 	query := `
     CREATE TABLE IF NOT EXISTS books (
-        bookid serial primary key,
+        bookid serial unique,
         name varchar(255) not null,
         genre varchar(255) not null,
         author varchar(255) not null,
-        price_inr int,
-        count int
+        price_inr int not null,
+        count int not null,
+        PRIMARY KEY (name,author)
     );
     `
 

@@ -27,7 +27,7 @@ func AddBook(b *Book) error {
 }
 
 func DeleteBook(bookid int) error {
-	_, err := db.Exec(`DELETE FROM books where bookid = $1`, bookid)
+	_, err := db.Exec(`DELETE FROM books WHERE bookid = $1`, bookid)
 	if err != nil {
 		return err
 	}

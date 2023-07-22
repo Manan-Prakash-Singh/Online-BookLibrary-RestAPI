@@ -58,3 +58,24 @@ func CreateBook(c *gin.Context) {
 		"data": "Book succesfully created",
 	})
 }
+
+func DeleteBook(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, err)
+		return
+	}
+
+	if err := models.DeleteBook(id); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Book deleted",
+	})
+
+}
