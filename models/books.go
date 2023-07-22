@@ -64,3 +64,34 @@ func GetTotalBooksCount() (int, error) {
 	}
 	return total_count, nil
 }
+
+func GetAllBooks() ([]Book, error) {
+	rows, err := db.Query("SELECT * FROM books")
+	if err != nil {
+		return nil, err
+	}
+
+	var books []Book
+
+	for rows.Next() {
+		book := Book{}
+		err := rows.Scan(
+			&book.BookID,
+			&book.Name,
+			&book.Genre,
+			&book.Author,
+			&book.Price,
+			&book.Count,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return books, nil
+}
