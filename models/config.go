@@ -43,6 +43,12 @@ func createTables() error {
 		return err
 	}
 
+	err = createUserTable()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -60,6 +66,23 @@ func createBookTable() error {
     );
     `
 
+	_, err := db.Exec(query)
+
+	return err
+}
+
+func createUserTable() error {
+	query := `
+    CREATE TABLE IF NOT EXISTS users(
+        user_id serial,
+        first_name varchar(255) not null,
+        last_name varchar(255) not null,
+        email varchar(255) not null unique,
+        password varchar(255) not null,
+        is_admin int not null,
+        PRIMARY KEY (user_id,email)
+    )
+    `
 	_, err := db.Exec(query)
 
 	return err
