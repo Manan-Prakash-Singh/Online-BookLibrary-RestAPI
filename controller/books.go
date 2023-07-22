@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 func GetAllBooks(c *gin.Context) {
+
 	books, err := models.GetAllBooks()
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -36,4 +36,25 @@ func GetBookByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, book)
+}
+
+func CreateBook(c *gin.Context) {
+	book := models.Book{}
+	if err := c.BindJSON(&book); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err.Error(),
+		})
+		return
+	}
+
+	if err := models.AddBook(&book); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"errors": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": "Book succesfully created",
+	})
 }
