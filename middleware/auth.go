@@ -7,7 +7,6 @@ import (
 
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gionic/gin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,7 +41,9 @@ func AuthorizeUser() gin.HandlerFunc {
 
 func AuthorizeAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		err := verifyToken(c)
+
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": err.Error(),
@@ -51,6 +52,17 @@ func AuthorizeAdmin() gin.HandlerFunc {
 			return
 		}
 
+		admin, _ := c.Get("is_admin")
+
+		if !admin.(bool) {
+			c.JSON(http.StatusForbidden, gin.H{
+				"error": "Insufficient Permission",
+			})
+			c.Abort()
+			return
+		}
+
+		c.Next()
 	}
 }
 
