@@ -79,8 +79,8 @@ func createUserTable() error {
         last_name varchar(255) not null,
         email varchar(255) not null unique,
         password varchar(255) not null,
-        is_admin int not null
-        PRIMARY KEY (user_id,email)
+        is_admin boolean not null,
+        PRIMARY KEY (first_name, last_name, email)
     )
     `
 	_, err := db.Exec(query)
