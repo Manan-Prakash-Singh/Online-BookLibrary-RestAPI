@@ -1,13 +1,15 @@
 package controller
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+	"strings"
+
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/middleware"
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"log"
-	"net/http"
-	"strings"
 )
 
 const secretKey = "poggers69420"
@@ -79,4 +81,67 @@ func LoginUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func GrantAdmin(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad URL"})
+		return
+	}
+
+	user, err := models.GetUserByID(id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = models.GrantAdmin(user.UserID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "Granted admin privileges."})
+}
+
+func GetAllUsers(c *gin.Context) {
+	usersList, err := models.GetAllUsers()
+
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server Error"})
+		return
+	}
+
+	type customUser struct {
+		UserID    int    `json:"user_id"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Email     string `json:"email_id"`
+		IsAdmin   bool   `json:"is_admin"`
+	}
+	var users []customUser
+
+	for _, user := range usersList {
+		user := customUser{
+			user.UserID,
+			user.FirstName,
+			user.LastName,
+			user.Email,
+			user.IsAdmin,
+		}
+		users = append(users, user)
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func DeleteUser(c *gin.Context) {
+
 }

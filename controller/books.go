@@ -60,6 +60,7 @@ func CreateBook(c *gin.Context) {
 }
 
 func DeleteBook(c *gin.Context) {
+
 	idStr := c.Param("id")
 
 	id, err := strconv.Atoi(idStr)

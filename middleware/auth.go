@@ -89,6 +89,13 @@ func verifyToken(c *gin.Context) error {
 		return fmt.Errorf("Invalid JWT")
 	}
 
+	userFloatID, ok := claims["id"].(float64)
+
+	if !ok {
+		log.Println("Error extracting user_id")
+		return fmt.Errorf("Invalid JWT")
+	}
+
 	email, ok := claims["email"].(string)
 
 	if !ok {
@@ -103,8 +110,11 @@ func verifyToken(c *gin.Context) error {
 		return fmt.Errorf("Invalid JWT")
 	}
 
+	userID := int(userFloatID)
+
 	c.Set("email", email)
 	c.Set("is_admin", admin)
+	c.Set("user_id", userID)
 
 	return nil
 }

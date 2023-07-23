@@ -17,9 +17,12 @@ func main() {
 	})
 
 	r.GET("/books", controller.GetAllBooks)
-	r.POST("/books", controller.CreateBook)
-	r.GET("/books/:id", controller.GetBookByID)
+	r.POST("/books", middleware.AuthorizeAdmin, controller.CreateBook)
+	r.GET("/users", middleware.AuthorizeAdmin, controller.GetAllUsers)
 	r.DELETE("/books/:id", middleware.AuthorizeAdmin, controller.DeleteBook)
+	r.PATCH("/user/:id/grant-admin", middleware.AuthorizeAdmin, controller.GrantAdmin)
+	r.DELETE("/user/:id", middleware.AuthorizeAdmin, controller.DeleteUser)
+	r.GET("/books/:id", controller.GetBookByID)
 	r.POST("/user/register", controller.RegisterNewUser)
 	r.POST("/user/login", controller.LoginUser)
 
