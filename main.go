@@ -19,7 +19,8 @@ func main() {
 	r.POST("/books", controller.CreateBook)
 	r.GET("/books/:id", controller.GetBookByID)
 	r.DELETE("/books/:id", controller.DeleteBook)
-	r.POST("/user", controller.RegisterNewUser)
+	r.POST("/user/register", controller.RegisterNewUser)
+	r.POST("/user/login", controller.LoginUser)
 
 	r.Run()
 }

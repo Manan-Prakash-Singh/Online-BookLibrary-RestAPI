@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/middleware"
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
+	"strings"
 )
+
+const secretKey = "poggers69420"
 
 func RegisterNewUser(c *gin.Context) {
 
@@ -39,5 +43,39 @@ func RegisterNewUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": "Successfully created user"})
+}
 
+func LoginUser(c *gin.Context) {
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+
+	user, err := models.GetUserByEmail(email)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Couldn't find") {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to search in database"})
+			log.Printf("Unauthorized user access, email_id: %s, err: %s\n", email, err.Error())
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+			log.Printf("Databse error: %s\n", err.Error())
+		}
+		c.Abort()
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		log.Printf("Incorrect password: %s", err.Error())
+		return
+	}
+
+	token, err := middleware.GenerateToken(user)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
