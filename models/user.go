@@ -129,3 +129,11 @@ func GrantAdmin(id int) error {
 	}
 	return nil
 }
+
+func DeleteUser(id int) error {
+	_, err := db.Exec(`DELETE FROM users WHERE user_id = $1`, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -143,5 +143,19 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
 
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad URL"})
+		return
+	}
+
+	if err := models.DeleteUser(id); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server Error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted User"})
 }
