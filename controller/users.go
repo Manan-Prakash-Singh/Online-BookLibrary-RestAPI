@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/gin-gionic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func RegisterNewUser(c *gin.Context) {
