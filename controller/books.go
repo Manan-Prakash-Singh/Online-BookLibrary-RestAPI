@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

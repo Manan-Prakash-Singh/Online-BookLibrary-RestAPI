@@ -2,13 +2,12 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/models"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 )
 
 const secretKey = "poggers69420"

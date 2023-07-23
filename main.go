@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/controller"
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/middleware"
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/controller"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/middleware"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

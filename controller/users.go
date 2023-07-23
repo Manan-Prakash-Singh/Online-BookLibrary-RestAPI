@@ -1,15 +1,14 @@
 package controller
 
 import (
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/middleware"
+	"github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI/models"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/middleware"
-	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
-	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 const secretKey = "poggers69420"

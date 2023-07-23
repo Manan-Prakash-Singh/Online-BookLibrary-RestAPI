@@ -1,4 +1,4 @@
-module github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI
+module github.com/Manan-Prakash-Singh/Online-BookLibrary-RestAPI
 
 go 1.20
 
