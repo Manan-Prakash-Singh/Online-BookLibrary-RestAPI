@@ -1,1 +1,1 @@
-# Online Book Store REST API 
+# Online Book Library REST API 

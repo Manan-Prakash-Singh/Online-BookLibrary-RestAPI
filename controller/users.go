@@ -143,6 +143,7 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
+
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 
