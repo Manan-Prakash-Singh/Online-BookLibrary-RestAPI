@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -39,31 +40,30 @@ func AuthorizeUser() gin.HandlerFunc {
 	}
 }
 
-func AuthorizeAdmin() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func AuthorizeAdmin(c *gin.Context) {
 
-		err := verifyToken(c)
+	err := verifyToken(c)
 
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
-			})
-			c.Abort()
-			return
-		}
-
-		admin, _ := c.Get("is_admin")
-
-		if !admin.(bool) {
-			c.JSON(http.StatusForbidden, gin.H{
-				"error": "Insufficient Permission",
-			})
-			c.Abort()
-			return
-		}
-
-		c.Next()
+	if err != nil {
+		log.Printf("Error in verifying the token, %s\n", err.Error())
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
+		c.Abort()
+		return
 	}
+
+	admin, _ := c.Get("is_admin")
+
+	if !admin.(bool) {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "Insufficient Permission",
+		})
+		c.Abort()
+		return
+	}
+
+	c.Next()
 }
 
 func verifyToken(c *gin.Context) error {
@@ -85,18 +85,21 @@ func verifyToken(c *gin.Context) error {
 	claims, ok := token.Claims.(jwt.MapClaims)
 
 	if !ok {
+		log.Println("Couldn't get the claims")
 		return fmt.Errorf("Invalid JWT")
 	}
 
-	email, ok := claims["email"].(int)
+	email, ok := claims["email"].(string)
 
 	if !ok {
+		log.Println("Error in extracting the email")
 		return fmt.Errorf("Invalid JWT")
 	}
 
 	admin, ok := claims["is_admin"].(bool)
 
 	if !ok {
+		log.Println("Error in extracting admin field")
 		return fmt.Errorf("Invalid JWT")
 	}
 

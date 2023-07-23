@@ -46,6 +46,7 @@ func RegisterNewUser(c *gin.Context) {
 }
 
 func LoginUser(c *gin.Context) {
+
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
