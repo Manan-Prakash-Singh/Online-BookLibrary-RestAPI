@@ -1,11 +1,14 @@
 package middleware
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/Manan-Prakash-Singh/Online-Bookstore-RestAPI/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gionic/gin"
-	"net/http"
-	"time"
+	"github.com/gin-gonic/gin"
 )
 
 const secretKey = "poggers69420"
@@ -22,27 +25,71 @@ func GenerateToken(user *models.User) (string, error) {
 	return token.SignedString([]byte(secretKey))
 }
 
-func authMiddleware() gin.HandlerFunc {
+func AuthorizeUser() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		tokenString := c.GetHeader("Authorization")
-
-		if tokenString == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization token"})
+		err := verifyToken(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
 			c.Abort()
 			return
 		}
-
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte(secretKey), nil
-		})
-
-		if err != nil || !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
-			c.Abort()
-			return
-		}
-
 		c.Next()
 	}
+}
+
+func AuthorizeAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := verifyToken(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+	}
+}
+
+func verifyToken(c *gin.Context) error {
+
+	tokenString := c.GetHeader("Authorization")
+
+	if tokenString == "" {
+		return fmt.Errorf("Missing Authorization header")
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+
+	if err != nil || !token.Valid {
+		return fmt.Errorf("Invalid or expired token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	if !ok {
+		return fmt.Errorf("Invalid JWT")
+	}
+
+	email, ok := claims["email"].(int)
+
+	if !ok {
+		return fmt.Errorf("Invalid JWT")
+	}
+
+	admin, ok := claims["is_admin"].(bool)
+
+	if !ok {
+		return fmt.Errorf("Invalid JWT")
+	}
+
+	c.Set("email", email)
+	c.Set("is_admin", admin)
+
+	return nil
 }
