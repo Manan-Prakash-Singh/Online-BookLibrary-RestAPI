@@ -87,3 +87,4 @@ func createUserTable() error {
 
 	return err
 }
+
